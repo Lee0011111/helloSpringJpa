@@ -119,6 +119,9 @@
             </tr>
         </tbody>
     </table>
-
+    <div style="margin-top: 50px; padding: 20px; background-color: #f8f9fa; text-align: center; font-weight: bold;">
+        <p th:text="${'실습 수행 일시: ' + #temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></p>
+        <p>학번: 1971372 | 성명: 이현동</p>
+    </div>
 </body>
 </html>
