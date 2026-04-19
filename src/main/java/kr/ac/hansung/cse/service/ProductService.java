@@ -6,7 +6,6 @@ import kr.ac.hansung.cse.repository.CategoryRepository;
 import kr.ac.hansung.cse.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -17,19 +16,25 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
-    public ProductService(ProductRepository productRepository,
-                          CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
     }
 
-    public Category resolveCategory(String categoryName) {
-        if (categoryName == null || categoryName.isBlank()) return null;
-        return categoryRepository.findByName(categoryName).orElse(null);
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    public List<Product> searchByName(String keyword) {
+        return productRepository.findByNameContaining(keyword);
+    }
+
+    public List<Product> searchByCategory(Long categoryId) {
+        return productRepository.findByCategoryId(categoryId);
     }
 
     public Optional<Product> getProductById(Long id) {
@@ -37,28 +42,12 @@ public class ProductService {
     }
 
     @Transactional
-    public Product createProduct(Product product) {
-        if (product.getPrice() != null && product.getPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("상품 가격은 0 이상이어야 합니다.");
-        }
-        return productRepository.save(product);
-    }
-
-    @Transactional
-    public Product updateProduct(Product product) {
-        if (product.getPrice() != null && product.getPrice().compareTo(java.math.BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("상품 가격은 0 이상이어야 합니다.");
-        }
-        return productRepository.update(product);
+    public void saveProduct(Product product) {
+        productRepository.save(product);
     }
 
     @Transactional
     public void deleteProduct(Long id) {
         productRepository.delete(id);
-    }
-
-    @Transactional
-    public void saveCategory(Category category) {
-        categoryRepository.save(category);
     }
 }
