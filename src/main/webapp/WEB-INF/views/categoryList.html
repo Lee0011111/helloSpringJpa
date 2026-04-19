@@ -1,10 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>카테고리 관리</title>
+    <style>
+        body { font-family: 'Malgun Gothic', sans-serif; max-width: 700px; margin: 40px auto; padding: 0 20px; }
+        .msg { padding: 10px; margin-bottom: 20px; border-radius: 4px; text-align: center; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background-color: #28a745; color: white; padding: 12px; }
+        td { border-bottom: 1px solid #eee; padding: 10px; text-align: center; }
+        .btn-add { display: inline-block; background: #28a745; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-bottom: 20px; }
+        .footer { margin-top: 50px; padding: 20px; background-color: #f8f9fa; text-align: center; }
+    </style>
 </head>
 <body>
-$END$
+<h1>카테고리 관리</h1>
+
+<div th:if="${successMessage}" class="msg success" th:text="${successMessage}"></div>
+<div th:if="${errorMessage}" class="msg error" th:text="${errorMessage}"></div>
+
+<a th:href="@{/categories/create}" class="btn-add">+ 새 카테고리 추가</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>카테고리명</th>
+        <th>작업</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cat : ${categories}">
+        <td th:text="${cat.id}"></td>
+        <td th:text="${cat.name}" style="font-weight: bold;"></td>
+        <td>
+            <form th:action="@{/categories/{id}/delete(id=${cat.id})}" method="post" onsubmit="return confirm('이 카테고리를 삭제하시겠습니까?');">
+                <button type="submit" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">삭제</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p style="text-align: center; margin-top: 20px;"><a th:href="@{/products}">상품 목록으로 돌아가기</a></p>
+
+<div class="footer">
+    <p th:text="${'실습 수행 일시: ' + #temporals.format(#temporals.createNow(), 'yyyy-MM-dd HH:mm:ss')}"></p>
+    <p>학번: 1971372 | 성명: 이현동</p>
+</div>
 </body>
 </html>
